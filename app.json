@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "plaitedSupabase",
-    "slug": "plaitedSupabase",
+    "slug": "plaited",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,6 +28,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "dd9a3d1c-77b7-42f0-b361-86cd7409e7f7"
+      }
+    },
+    "owner": "lawrence1470"
   }
 }
