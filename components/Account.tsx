@@ -3,6 +3,7 @@ import { supabase } from "../lib/supabase";
 import { StyleSheet, View, Alert } from "react-native";
 import { Button, Input } from "react-native-elements";
 import { Session } from "@supabase/supabase-js";
+import GeoLocation from "./GeoLocation";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
@@ -72,30 +73,38 @@ export default function Account({ session }: { session: Session }) {
     }
   }
 
+
+
+
   return (
     <View>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Input label="Email" value={session?.user?.email} disabled />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Input
-          label="Username"
-          value={username || ""}
-          onChangeText={(text) => setUsername(text)}
-        />
+      {/*<View style={[styles.verticallySpaced, styles.mt20]}>*/}
+      {/*  <Input label="Email" value={session?.user?.email} disabled />*/}
+      {/*</View>*/}
+
+      <View style={styles.container}>
+        <GeoLocation />
       </View>
 
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          title={loading ? "Loading ..." : "Update"}
-          onPress={() => updateProfile({ username, avatar_url: avatarUrl })}
-          disabled={loading}
-        />
-      </View>
+      {/*<View style={styles.verticallySpaced}>*/}
+      {/*  <Input*/}
+      {/*    label="Username"*/}
+      {/*    value={username || ""}*/}
+      {/*    onChangeText={(text) => setUsername(text)}*/}
+      {/*  />*/}
+      {/*</View>*/}
 
-      <View style={styles.verticallySpaced}>
-        <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
-      </View>
+      {/*<View style={[styles.verticallySpaced, styles.mt20]}>*/}
+      {/*  <Button*/}
+      {/*    title={loading ? "Loading ..." : "Update"}*/}
+      {/*    onPress={() => updateProfile({ username, avatar_url: avatarUrl })}*/}
+      {/*    disabled={loading}*/}
+      {/*  />*/}
+      {/*</View>*/}
+
+      {/*<View style={styles.verticallySpaced}>*/}
+      {/*  <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />*/}
+      {/*</View>*/}
     </View>
   );
 }
@@ -104,6 +113,7 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 40,
     padding: 12,
+    flex: 1
   },
   verticallySpaced: {
     paddingTop: 4,
