@@ -1,0 +1,3 @@
+type AccountFlowStack = {
+  auth: undefined;
+}
