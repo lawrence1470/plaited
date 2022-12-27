@@ -12,7 +12,15 @@ import axios from "axios";
 import { GOOGLE_PLACES_API_KEY } from "@env";
 import { debounce } from "lodash";
 
-export default function AddressAutocomplete() {
+export default function AddressAutocomplete({
+  setLat,
+  setLng,
+  setAddress,
+}: {
+  setLat: (lat: number) => void;
+  setLng: (lng: number) => void;
+  setAddress: (address: string) => void;
+}) {
   const [searchKeyword, setSearchKeyword] = React.useState("");
   const [searchResults, setSearchResults] = React.useState<any[]>([]);
   const [isShowingResults, setIsShowingResults] = React.useState(false);
@@ -26,7 +34,21 @@ export default function AddressAutocomplete() {
       setSearchResults(response.data.predictions);
       setIsShowingResults(true);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+    }
+  };
+
+  const setLngAndLat = async (placeId: string) => {
+    try {
+      const response = await axios.post(
+        `https://maps.googleapis.com/maps/api/place/details/json?key=${GOOGLE_PLACES_API_KEY}&place_id=${placeId}`
+      );
+
+      const { lat, lng } = response.data.result.geometry.location;
+      setLat(lat);
+      setLng(lng);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -40,7 +62,6 @@ export default function AddressAutocomplete() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
       <View style={styles.autocompleteContainer}>
         <TextInput
           placeholder="Search for an address"
@@ -56,10 +77,12 @@ export default function AddressAutocomplete() {
             renderItem={({ item }) => {
               return (
                 <TouchableOpacity
+                  key={item.description}
                   style={styles.resultItem}
                   onPress={() => {
-                    console.log(item, 'itemmmm')
                     setSearchKeyword(item.description);
+                    setLngAndLat(item.place_id);
+                    setAddress(item.description);
                     setIsShowingResults(false);
                   }}
                 >
@@ -72,8 +95,6 @@ export default function AddressAutocomplete() {
           />
         )}
       </View>
-      <View style={styles.dummmy} />
-    </SafeAreaView>
   );
 }
 
@@ -87,12 +108,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     position: "absolute",
     top: 50,
-  },
-  dummmy: {
-    width: 600,
-    height: 200,
-    backgroundColor: "hotpink",
-    marginTop: 20,
   },
   resultItem: {
     width: "100%",

@@ -1,8 +1,8 @@
 import "react-native-url-polyfill/auto";
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 import { supabase } from "./lib/supabase";
 import AuthScreen from "./screens/AuthScreen";
-import LocationStep from "./screens/LocationStep";
+import LocationScreen from "./screens/LocationScreen";
 import { Session } from "@supabase/supabase-js";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -10,22 +10,23 @@ import { NativeBaseProvider } from "native-base";
 import { Database } from "./lib/database.types";
 import { Text } from "react-native";
 import { Profile } from "./lib/types";
+import ApprovedAddressScreen from "./screens/ApprovedAddressScreen";
+import NotApprovedAddressScreen from "./screens/NotApprovedAddressScreen";
+import NewPhoneNumberScreen from "./screens/NewPhoneNumberScreen";
 
-const getUser = async (session: Session) => {
+const getProfie = async (session: Session) => {
   const userId = session.user.id;
-  return await supabase
-    .from("profiles")
-    .select(`is_serviceable`)
-    .eq("id", userId)
-    .single();
+  return await supabase.from("profiles").select().eq("id", userId).single();
 };
 
 // TODO get rid of any here
-const AuthStack = createNativeStackNavigator<any>() as any;
+const Stack = createNativeStackNavigator<any>() as any;
+
+export const AuthContext = createContext(null) as any;
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser] = useState<Profile | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -35,27 +36,57 @@ export default function App() {
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
-
-    if (session?.user.aud === "authenticated") {
-      getUser(session).then(({ data }) => {
-        setUser(data as Profile);
-      });
-    }
   }, []);
 
+  useEffect(() => {
+    if (session?.user.aud === "authenticated") {
+      getProfie(session).then(({ data }) => {
+        setProfile(data as Profile);
+      });
+    }
+  }, [session]);
+
+  const isServiceable = profile?.is_serviceable;
+
   return (
-    <NativeBaseProvider>
-      <NavigationContainer>
-        {session?.user.aud !== "authenticated" ? (
-          <AuthStack.Navigator>
-            <AuthStack.Screen name="Auth" component={AuthScreen} />
-          </AuthStack.Navigator>
-        ) : (
-          <AuthStack.Navigator>
-            <AuthStack.Screen name="LocationStep" component={LocationStep} />
-          </AuthStack.Navigator>
-        )}
-      </NavigationContainer>
-    </NativeBaseProvider>
+    <AuthContext.Provider value={{ session, profile }}>
+      <NativeBaseProvider>
+        <NavigationContainer>
+          {!isServiceable ? (
+            <>
+              {session?.user.aud !== "authenticated" ? (
+                <Stack.Navigator>
+                  <Stack.Screen name="Auth" component={AuthScreen} />
+                </Stack.Navigator>
+              ) : (
+                <>
+                  <Stack.Navigator>
+                    <Stack.Screen
+                      name="LocationStep"
+                      component={LocationScreen}
+                    />
+                    <Stack.Screen
+                      name="ApprovedAddress"
+                      component={ApprovedAddressScreen}
+                    />
+                    <Stack.Screen
+                      name="NotApprovedAddress"
+                      component={NotApprovedAddressScreen}
+                    />
+                  </Stack.Navigator>
+                </>
+              )}
+            </>
+          ) : (
+            <Stack.Navigator>
+              <Stack.Screen
+                name="NewPhoneNumber"
+                component={NewPhoneNumberScreen}
+              />
+            </Stack.Navigator>
+          )}
+        </NavigationContainer>
+      </NativeBaseProvider>
+    </AuthContext.Provider>
   );
 }

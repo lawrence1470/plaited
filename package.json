@@ -8,7 +8,6 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "update-types": "npx supabase gen types typescript --project-id $project_id > lib/database.types.ts"
-
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.17.3",
@@ -22,6 +21,7 @@
     "expo-updates": "~0.15.6",
     "lodash": "^4.17.21",
     "native-base": "^3.4.25",
+    "point-in-polygon": "^1.1.0",
     "prettier": "^2.8.1",
     "react": "18.1.0",
     "react-dom": "18.1.0",
@@ -38,6 +38,7 @@
   "devDependencies": {
     "@babel/core": "^7.19.3",
     "@types/lodash": "^4.14.191",
+    "@types/point-in-polygon": "^1.1.1",
     "@types/react": "~18.0.24",
     "@types/react-native": "~0.70.6",
     "typescript": "^4.6.3"
