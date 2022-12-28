@@ -13,6 +13,8 @@ import { Profile } from "./lib/types";
 import ApprovedAddressScreen from "./screens/ApprovedAddressScreen";
 import NotApprovedAddressScreen from "./screens/NotApprovedAddressScreen";
 import NewPhoneNumberScreen from "./screens/NewPhoneNumberScreen";
+import OtpScreen from "./screens/OtpScreen";
+import GatedScreen from "./screens/GatedScreen";
 
 const getProfie = async (session: Session) => {
   const userId = session.user.id;
@@ -83,6 +85,12 @@ export default function App() {
                 name="NewPhoneNumber"
                 component={NewPhoneNumberScreen}
               />
+              <Stack.Screen
+                name="Otp"
+                component={OtpScreen}
+              />
+              <Stack.Screen name="Gated" component={GatedScreen} />
+
             </Stack.Navigator>
           )}
         </NavigationContainer>
