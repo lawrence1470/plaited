@@ -1,12 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { SafeAreaView, StyleSheet, Button, Text } from "react-native";
 
 import { checkVerification } from "../api/verify";
 import OTPInputView from "@twotalltotems/react-native-otp-input";
+import { supabase } from "../lib/supabase";
+import { AuthContext } from "../App";
 
 const OtpScreen = ({ route, navigation }: any) => {
   const { phoneNumber } = route.params;
   const [invalidCode, setInvalidCode] = useState(false);
+
+  const context = useContext(AuthContext) as any;
+
+  const handleAddPhoneNumber = async (phoneNumber: string) => {
+    try {
+      await supabase
+        .from("profiles")
+        .update({ phone_number: phoneNumber })
+        .eq("id", context.profile.id);
+      navigation.replace("Gated");
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <SafeAreaView style={styles.wrapper}>
       <Text style={styles.prompt}>Enter the code we sent you</Text>
@@ -25,8 +41,11 @@ const OtpScreen = ({ route, navigation }: any) => {
         codeInputHighlightStyle={styles.underlineStyleHighLighted}
         onCodeFilled={(code) => {
           checkVerification(phoneNumber, code).then((success) => {
-            if (!success) setInvalidCode(true);
-            success && navigation.replace("Gated");
+            if (!success) {
+              setInvalidCode(true);
+              return;
+            }
+            handleAddPhoneNumber(phoneNumber);
           });
         }}
       />

@@ -7,14 +7,13 @@ import { Session } from "@supabase/supabase-js";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NativeBaseProvider } from "native-base";
-import { Database } from "./lib/database.types";
-import { Text } from "react-native";
 import { Profile } from "./lib/types";
 import ApprovedAddressScreen from "./screens/ApprovedAddressScreen";
 import NotApprovedAddressScreen from "./screens/NotApprovedAddressScreen";
 import NewPhoneNumberScreen from "./screens/NewPhoneNumberScreen";
 import OtpScreen from "./screens/OtpScreen";
 import GatedScreen from "./screens/GatedScreen";
+import HomeScreen from "./screens/HomeScreen";
 
 const getProfie = async (session: Session) => {
   const userId = session.user.id;
@@ -49,6 +48,7 @@ export default function App() {
   }, [session]);
 
   const isServiceable = profile?.is_serviceable;
+  const hasPhoneNumber = profile?.phone_number;
 
   return (
     <AuthContext.Provider value={{ session, profile }}>
@@ -80,18 +80,22 @@ export default function App() {
               )}
             </>
           ) : (
-            <Stack.Navigator>
-              <Stack.Screen
-                name="NewPhoneNumber"
-                component={NewPhoneNumberScreen}
-              />
-              <Stack.Screen
-                name="Otp"
-                component={OtpScreen}
-              />
-              <Stack.Screen name="Gated" component={GatedScreen} />
-
-            </Stack.Navigator>
+            <>
+              {!hasPhoneNumber ? (
+                <Stack.Navigator>
+                  <Stack.Screen
+                    name="NewPhoneNumber"
+                    component={NewPhoneNumberScreen}
+                  />
+                  <Stack.Screen name="Otp" component={OtpScreen} />
+                  <Stack.Screen name="Gated" component={GatedScreen} />
+                </Stack.Navigator>
+              ) : (
+                <Stack.Navigator>
+                  <Stack.Screen name="Home" component={HomeScreen} />
+                </Stack.Navigator>
+              )}
+            </>
           )}
         </NavigationContainer>
       </NativeBaseProvider>

@@ -1,17 +1,8 @@
 import {
   View,
   StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  Text,
-  Pressable,
 } from "react-native";
-import Constants from "expo-constants";
-import {
-  SUPABASE_ANON_KEY,
-  SUPABASE_EDGE_FUNCTION_GEO_LOCATION_URL,
-} from "@env";
-import axios from "axios";
+
 import { useState, useContext } from "react";
 import AddressAutocomplete from "../components/widgets/AddressAutocomplete";
 import { Box, Button, Spinner, VStack } from "native-base";
