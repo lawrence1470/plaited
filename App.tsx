@@ -14,6 +14,13 @@ import NewPhoneNumberScreen from "./screens/NewPhoneNumberScreen";
 import OtpScreen from "./screens/OtpScreen";
 import GatedScreen from "./screens/GatedScreen";
 import HomeScreen from "./screens/HomeScreen";
+import CartScreen from "./screens/CartScreen";
+import OrderContextProvider from "./context/OrderContext";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Footer from "./components/Footer";
+import { StripeProvider } from "@stripe/stripe-react-native";
+import { STRIPE_PUBLISHABLE_KEY } from "@env";
+import AddPaymentScreen from "./screens/AddPaymentScreen";
 
 const getProfie = async (session: Session) => {
   const userId = session.user.id;
@@ -22,6 +29,7 @@ const getProfie = async (session: Session) => {
 
 // TODO get rid of any here
 const Stack = createNativeStackNavigator<any>() as any;
+const Tab = createBottomTabNavigator();
 
 export const AuthContext = createContext(null) as any;
 
@@ -29,9 +37,14 @@ export default function App() {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [step, setStep] = useState<string | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
 
@@ -48,118 +61,61 @@ export default function App() {
     }
   }, [session]);
 
-  useEffect(() => {
-   setStep(renderStep())
-  }, [session, profile]);
-
-
-
-  const renderStep = () => {
-    const isServiceable = profile?.is_serviceable;
-    const hasPhoneNumber = profile?.phone_number;
-    if (session?.user.aud !== "authenticated") {
-      return "Auth";
-    }
-
-    if (!isServiceable ) {
-      return "Location";
-    }
-
-    if(!hasPhoneNumber) {
-      return "NewPhoneNumber";
-    }
-
-    return "Home";
-  };
-
-  console.log(step, 'step')
+  const isDoneOnboarding = profile?.is_onboarding_done || step === "Home";
 
   return (
-    <AuthContext.Provider value={{ session, profile }}>
-      <NativeBaseProvider>
-        {/*<NavigationContainer>*/}
-        {/*  {!isServiceable ? (*/}
-        {/*    <>*/}
-        {/*      {session?.user.aud !== "authenticated" ? (*/}
-        {/*        <Stack.Navigator>*/}
-        {/*          <Stack.Screen name="Auth" component={AuthScreen} />*/}
-        {/*        </Stack.Navigator>*/}
-        {/*      ) : (*/}
-        {/*        <>*/}
-        {/*          <Stack.Navigator>*/}
-        {/*            <Stack.Screen*/}
-        {/*              name="LocationStep"*/}
-        {/*              component={LocationScreen}*/}
-        {/*            />*/}
-        {/*            <Stack.Screen*/}
-        {/*              name="ApprovedAddress"*/}
-        {/*              component={ApprovedAddressScreen}*/}
-        {/*            />*/}
-        {/*            <Stack.Screen*/}
-        {/*              name="NotApprovedAddress"*/}
-        {/*              component={NotApprovedAddressScreen}*/}
-        {/*            />*/}
-        {/*            <Stack.Screen*/}
-        {/*              name="NewPhoneNumber"*/}
-        {/*              component={NewPhoneNumberScreen}*/}
-        {/*            />*/}
-        {/*          </Stack.Navigator>*/}
-        {/*        </>*/}
-        {/*      )}*/}
-        {/*    </>*/}
-        {/*  ) : (*/}
-        {/*    <>*/}
-        {/*      {!hasPhoneNumber ? (*/}
-        {/*        <Stack.Navigator>*/}
-        {/*          <Stack.Screen*/}
-        {/*            name="NewPhoneNumber"*/}
-        {/*            component={NewPhoneNumberScreen}*/}
-        {/*          />*/}
-        {/*          <Stack.Screen name="Otp" component={OtpScreen} />*/}
-        {/*          <Stack.Screen name="Gated" component={GatedScreen} />*/}
-        {/*        </Stack.Navigator>*/}
-        {/*      ) : (*/}
-        {/*        <Stack.Navigator>*/}
-        {/*          <Stack.Screen name="Home" component={HomeScreen} />*/}
-        {/*        </Stack.Navigator>*/}
-        {/*      )}*/}
-        {/*    </>*/}
-        {/*  )}*/}
-        {/*</NavigationContainer>*/}
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName={step}>
-            <Stack.Screen
-              name="Auth"
-              component={AuthScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen name="Location" component={LocationScreen} />
-            <Stack.Screen
-              name="ApprovedAddress"
-              component={ApprovedAddressScreen}
-            />
-            <Stack.Screen
-              name="NotApprovedAddress"
-              component={NotApprovedAddressScreen}
-            />
-            <Stack.Screen
-              name="NewPhoneNumber"
-              component={NewPhoneNumberScreen}
-            />
-            <Stack.Screen name="Otp" component={OtpScreen} />
-            <Stack.Screen name="Gated" component={GatedScreen} />
-            <Stack.Screen
-              name="Home"
-              component={HomeScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </NativeBaseProvider>
-    </AuthContext.Provider>
+    <>
+      <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY}>
+        <AuthContext.Provider value={{ session, profile, setStep }}>
+          <NativeBaseProvider>
+            {session?.user.aud !== "authenticated" ? (
+              <AuthScreen />
+            ) : (
+              <NavigationContainer>
+                {!isDoneOnboarding ? (
+                  <Stack.Navigator>
+                    <Stack.Screen name="Location" component={LocationScreen} />
+                    <Stack.Screen
+                      name="ApprovedAddress"
+                      component={ApprovedAddressScreen}
+                    />
+                    <Stack.Screen
+                      name="NotApprovedAddress"
+                      component={NotApprovedAddressScreen}
+                    />
+                    <Stack.Screen
+                      name="NewPhoneNumber"
+                      component={NewPhoneNumberScreen}
+                    />
+                    <Stack.Screen name="Otp" component={OtpScreen} />
+                    <Stack.Screen name="Gated" component={GatedScreen} />
+                  </Stack.Navigator>
+                ) : (
+                  <OrderContextProvider>
+                    <Stack.Navigator>
+                      <Stack.Screen
+                        name="AddPayment"
+                        component={AddPaymentScreen}
+                      />
+                      <Stack.Screen
+                        name="Main"
+                        component={() => (
+                          <Tab.Navigator
+                            tabBar={(props) => <Footer {...props} />}
+                          >
+                            <Tab.Screen name="Home" component={HomeScreen} />
+                            <Tab.Screen name="Cart" component={CartScreen} />
+                          </Tab.Navigator>
+                        )}
+                      />
+                    </Stack.Navigator>
+                  </OrderContextProvider>
+                )}
+              </NavigationContainer>
+            )}
+          </NativeBaseProvider>
+        </AuthContext.Provider>
+      </StripeProvider>
+    </>
   );
 }

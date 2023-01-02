@@ -1,7 +1,4 @@
-import {
-  View,
-  StyleSheet,
-} from "react-native";
+import { View, StyleSheet } from "react-native";
 
 import { useState, useContext } from "react";
 import AddressAutocomplete from "../components/widgets/AddressAutocomplete";
@@ -10,6 +7,8 @@ import { supabase } from "../lib/supabase";
 import { AuthContext } from "../App";
 import pointInPolygon from "point-in-polygon";
 import { NYC_CORDS } from "../constants/locations";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function GeoLocation({ navigation }: any) {
   const [lat, setLat] = useState<number | null>(null);
@@ -26,14 +25,7 @@ export default function GeoLocation({ navigation }: any) {
 
     if (isServiceable) {
       try {
-        await supabase
-          .from("addresses")
-          .insert({ full_address: address, id: context.profile.id });
-
-        await supabase
-          .from("profiles")
-          .update({ is_serviceable: true })
-          .eq("id", context.profile.id);
+        await AsyncStorage.setItem('@address', address)
         navigation.navigate("ApprovedAddress");
       } catch (error) {
         console.error(error);

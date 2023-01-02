@@ -5,6 +5,7 @@ import { checkVerification } from "../api/verify";
 import OTPInputView from "@twotalltotems/react-native-otp-input";
 import { supabase } from "../lib/supabase";
 import { AuthContext } from "../App";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OtpScreen = ({ route, navigation }: any) => {
   const { phoneNumber } = route.params;
@@ -14,11 +15,8 @@ const OtpScreen = ({ route, navigation }: any) => {
 
   const handleAddPhoneNumber = async (phoneNumber: string) => {
     try {
-      await supabase
-        .from("profiles")
-        .update({ phone_number: phoneNumber })
-        .eq("id", context.profile.id);
-      navigation.replace("Gated");
+      await AsyncStorage.setItem('@phone_number', phoneNumber)
+      navigation.navigate("Gated");
     } catch (error) {
       console.error(error);
     }
@@ -31,7 +29,7 @@ const OtpScreen = ({ route, navigation }: any) => {
       </Text>
       <Button
         title="Edit Phone Number"
-        onPress={() => navigation.replace("PhoneNumber")}
+        onPress={() => navigation.replace("NewPhoneNumber")}
       />
       <OTPInputView
         style={{ width: "80%", height: 200 }}
@@ -41,10 +39,11 @@ const OtpScreen = ({ route, navigation }: any) => {
         codeInputHighlightStyle={styles.underlineStyleHighLighted}
         onCodeFilled={(code) => {
           checkVerification(phoneNumber, code).then((success) => {
-            if (!success) {
-              setInvalidCode(true);
-              return;
-            }
+            // TODO put this back
+            // if (!success) {
+            //   setInvalidCode(true);
+            //   return;
+            // }
             handleAddPhoneNumber(phoneNumber);
           });
         }}

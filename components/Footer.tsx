@@ -1,99 +1,96 @@
 import { Box, Text, Icon, HStack, Center, Pressable } from "native-base";
 import { useState } from "react";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
+import { View } from "react-native";
 
-export default function Footer({}) {
-  const [selected, setSelected] = useState(1);
+type IconProps = {
+  [key: string]: {
+    type: any;
+    outline: string;
+    filled: string;
+  };
+};
+
+const icons: IconProps = {
+  "home": {
+    type: Ionicons,
+    filled: "ios-home",
+    outline: "ios-home-outline",
+  },
+  "cart": {
+    type: Ionicons,
+    filled: "cart",
+    outline: "cart-outline",
+  },
+};
+
+export default function Footer({ state, descriptors, navigation }: any) {
+  const [selected, setSelected] = useState(0);
 
   return (
-    <HStack bg="indigo.600" alignItems="center" safeAreaBottom shadow={6}>
-      <Pressable
-        opacity={selected === 0 ? 1 : 0.5}
-        py="3"
-        flex={1}
-        onPress={() => setSelected(0)}
-      >
-        <Center>
-          <Icon
-            mb="1"
-            as={
-              <MaterialCommunityIcons
-                name={selected === 0 ? "home" : "home-outline"}
-              />
-            }
-            color="white"
-            size="sm"
-          />
-          <Text color="white" fontSize="12">
-            Home
-          </Text>
-        </Center>
-      </Pressable>
-      <Pressable
-        opacity={selected === 1 ? 1 : 0.5}
-        py="2"
-        flex={1}
-        onPress={() => setSelected(1)}
-      >
-        <Center>
-          <Icon
-            mb="1"
-            as={<MaterialIcons name="search" />}
-            color="white"
-            size="sm"
-          />
-          <Text color="white" fontSize="12">
-            Search
-          </Text>
-        </Center>
-      </Pressable>
-      <Pressable
-        opacity={selected === 2 ? 1 : 0.6}
-        py="2"
-        flex={1}
-        onPress={() => setSelected(2)}
-      >
-        <Center>
-          <Icon
-            mb="1"
-            as={
-              <MaterialCommunityIcons
-                name={selected === 2 ? "cart" : "cart-outline"}
-              />
-            }
-            color="white"
-            size="sm"
-          />
-          <Text color="white" fontSize="12">
-            Cart
-          </Text>
-        </Center>
-      </Pressable>
-      <Pressable
-        opacity={selected === 3 ? 1 : 0.5}
-        py="2"
-        flex={1}
-        onPress={() => setSelected(3)}
-      >
-        <Center>
-          <Icon
-            mb="1"
-            as={
-              <MaterialCommunityIcons
-                name={selected === 3 ? "account" : "account-outline"}
-              />
-            }
-            color="white"
-            size="sm"
-          />
-          <Text color="white" fontSize="12">
-            Account
-          </Text>
-        </Center>
-      </Pressable>
-    </HStack>
+    <View>
+      <HStack bg="indigo.600" alignItems="center" safeAreaBottom shadow={6}>
+        {state &&
+          state.routes.map((route: any, index: number) => {
+            console.log(state, "state");
+            const { options } = descriptors[route.key];
+            const label =
+              options.tabBarLabel !== undefined
+                ? options.tabBarLabel
+                : options.title !== undefined
+                ? options.title
+                : route.name;
+
+            const isFocused = state.index === index;
+
+            const onPress = () => {
+              const event = navigation.emit({
+                type: "tabPress",
+                target: route.key,
+                canPreventDefault: true,
+              });
+
+              if (!isFocused && !event.defaultPrevented) {
+                // The `merge: true` option makes sure that the params inside the tab screen are preserved
+                navigation.navigate({ name: route.name, merge: true });
+              }
+            };
+
+            const onLongPress = () => {
+              navigation.emit({
+                type: "tabLongPress",
+                target: route.key,
+              });
+            };
+
+            const iconKey = icons[label.toLowerCase()]
+
+            return (
+              <Pressable
+                opacity={selected === 0 ? 1 : 0.5}
+                py="3"
+                flex={1}
+                onPress={onPress}
+                onLongPress={onLongPress}
+                key={index}
+              >
+                <Center>
+                  <Icon
+                    mb="1"
+                    as={iconKey.type}
+                    name={isFocused ? iconKey.filled : iconKey.outline}
+                    color="white"
+                    size="sm"
+                  />
+                  <Text color="white" fontSize="12">
+                    {label}
+                  </Text>
+                </Center>
+              </Pressable>
+            );
+          })}
+      </HStack>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({});
