@@ -23,6 +23,7 @@ import { STRIPE_PUBLISHABLE_KEY } from "@env";
 import AddPaymentScreen from "./screens/AddPaymentScreen";
 import AccountScreen from "./screens/AccountScreen";
 import TabNavigation from "./navigation/TabNavigation";
+import RegistrationFlow from "./navigation/RegistrationFlow";
 
 const getProfie = async (session: Session) => {
   const userId = session.user.id;
@@ -75,21 +76,7 @@ export default function App() {
               <NavigationContainer>
                 {!isDoneOnboarding ? (
                   <Stack.Navigator>
-                    <Stack.Screen name="Location" component={LocationScreen} />
-                    <Stack.Screen
-                      name="ApprovedAddress"
-                      component={ApprovedAddressScreen}
-                    />
-                    <Stack.Screen
-                      name="NotApprovedAddress"
-                      component={NotApprovedAddressScreen}
-                    />
-                    <Stack.Screen
-                      name="NewPhoneNumber"
-                      component={NewPhoneNumberScreen}
-                    />
-                    <Stack.Screen name="Otp" component={OtpScreen} />
-                    <Stack.Screen name="Gated" component={GatedScreen} />
+                    <Stack.Screen name="Registration" component={() => RegistrationFlow} />
                   </Stack.Navigator>
                 ) : (
                   <OrderContextProvider>
@@ -98,7 +85,7 @@ export default function App() {
                       {/*  name="AddPayment"*/}
                       {/*  component={AddPaymentScreen}*/}
                       {/*/>*/}
-                      <Stack.Screen name="Main" component={<TabNavigation />} />
+                      <Stack.Screen name="Main" component={() => <TabNavigation />} />
                     </Stack.Navigator>
                   </OrderContextProvider>
                 )}
