@@ -23,6 +23,11 @@ const icons: IconProps = {
     filled: "cart",
     outline: "cart-outline",
   },
+  "account": {
+    type: Ionicons,
+    filled: "person",
+    outline: "person-outline",
+  }
 };
 
 export default function Footer({ state, descriptors, navigation }: any) {

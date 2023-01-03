@@ -21,6 +21,8 @@ import Footer from "./components/Footer";
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { STRIPE_PUBLISHABLE_KEY } from "@env";
 import AddPaymentScreen from "./screens/AddPaymentScreen";
+import AccountScreen from "./screens/AccountScreen";
+import TabNavigation from "./navigation/TabNavigation";
 
 const getProfie = async (session: Session) => {
   const userId = session.user.id;
@@ -29,7 +31,6 @@ const getProfie = async (session: Session) => {
 
 // TODO get rid of any here
 const Stack = createNativeStackNavigator<any>() as any;
-const Tab = createBottomTabNavigator();
 
 export const AuthContext = createContext(null) as any;
 
@@ -93,21 +94,11 @@ export default function App() {
                 ) : (
                   <OrderContextProvider>
                     <Stack.Navigator>
-                      <Stack.Screen
-                        name="AddPayment"
-                        component={AddPaymentScreen}
-                      />
-                      <Stack.Screen
-                        name="Main"
-                        component={() => (
-                          <Tab.Navigator
-                            tabBar={(props) => <Footer {...props} />}
-                          >
-                            <Tab.Screen name="Home" component={HomeScreen} />
-                            <Tab.Screen name="Cart" component={CartScreen} />
-                          </Tab.Navigator>
-                        )}
-                      />
+                      {/*<Stack.Screen*/}
+                      {/*  name="AddPayment"*/}
+                      {/*  component={AddPaymentScreen}*/}
+                      {/*/>*/}
+                      <Stack.Screen name="Main" component={<TabNavigation />} />
                     </Stack.Navigator>
                   </OrderContextProvider>
                 )}
