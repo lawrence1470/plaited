@@ -13,6 +13,7 @@ export default function CartScreen({ navigation }: any) {
   const context = useContext(OrderContext) as any;
 
   return (
+    <>
     <View style={styles.container}>
       <Center>
         <HStack alignItems="center">
@@ -35,6 +36,7 @@ export default function CartScreen({ navigation }: any) {
         />
       </Box>
     </View>
+    </>
   );
 }
 
