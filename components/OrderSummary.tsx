@@ -14,12 +14,10 @@ import { FlatList, StyleSheet, View, Dimensions } from "react-native";
 import { FlatGrid } from "react-native-super-grid";
 import { useContext } from "react";
 import { OrderContext } from "../context/OrderContext";
-import { formatCurrency } from "react-native-format-currency";
-import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
-export default function OrderSummary({ navigation }: any) {
+export default function OrderSummary({ navigation, clearIngredients }: any) {
   const context = useContext(OrderContext) as any;
 
   const handleCartPress = () => {
@@ -58,7 +56,7 @@ export default function OrderSummary({ navigation }: any) {
           />
           <IconButton
             style={styles.iconButton}
-            // onPress={() => context.removeFromCart(ingredient.id)}
+            onPress={() => clearIngredients()}
             variant="unstyled"
             _icon={{
               color: "#777777",

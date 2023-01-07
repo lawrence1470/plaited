@@ -13,31 +13,28 @@ import OrderSummary from "../components/OrderSummary";
 
 export default function HomeScreen({ navigation }: any) {
   const [isLoading, setIsLoading] = useState(false);
-  const [ingredients, setIngredients] = useState<string[]>([]);
   const [instructions, setInstructions] = useState<string[]>([]);
-  const [nothingFound, setNothingFound] = useState(false);
   const [textAreaValue, setTextAreaValue] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   const context = useContext(OrderContext) as any;
 
-  const handleClearTextArea = () => {
-    setTextAreaValue("");
+  const clearIngredients = () => {
+    setIsSuccess(false);
     context.clearCart();
-    setIngredients([]);
-  }
-
+  };
 
   const handleSubmit = async () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(`${HEROKU_BASE_URL}/recipe`, {
+      const response = await axios.post(`${HEROKU_BASE_URL}/generateRecipe`, {
         name: textAreaValue,
       });
 
       if (response.data.success) {
-        const recipe = response.data.recipe;
+        const recipe = response.data;
         setInstructions(recipe.instructions);
-        setIngredients(recipe.ingredients);
+        setIsSuccess(true);
         context.setIngredientsInCart(recipe.ingredients);
       } else {
         Toast.show({
@@ -64,41 +61,25 @@ export default function HomeScreen({ navigation }: any) {
   return (
     <View style={styles.container}>
       <Box style={styles.content}>
-        <Box>
-          <UserInput
-            isDisabled={isLoading || instructions.length > 0}
-            onChange={handleChange}
-            textAreaValue={textAreaValue}
-          />
-
-          {isLoading && <Spinner color="emerald.500" />}
-        </Box>
-
-        <Center>
-          <Button isDisabled={isLoading} onPress={handleSubmit}>
-            Submit
-          </Button>
-        </Center>
-
-        <Box>
-          {nothingFound ? (
-            <Center>
-              <Text>Nothing was found try again</Text>
-            </Center>
-          ) : ingredients.length > 0 ? (
-            <Center>
-              <IngredientsGrid ingredients={ingredients} />
-            </Center>
-          ) : (
-            <Center>
-              <Text> Start searching</Text>
-            </Center>
-          )}
-        </Box>
+        {!isSuccess && (
+          <Box>
+            <UserInput
+              handleSubmit={handleSubmit}
+              isLoading={isLoading}
+              isDisabled={isLoading || instructions.length > 0}
+              onChange={handleChange}
+              textAreaValue={textAreaValue}
+            />
+          </Box>
+        )}
       </Box>
-      {ingredients.length > 0 && (
+
+      {isSuccess && (
         <Box style={styles.orderSummary}>
-          <OrderSummary navigation={navigation} />
+          <OrderSummary
+            navigation={navigation}
+            clearIngredients={clearIngredients}
+          />
         </Box>
       )}
 
@@ -106,6 +87,7 @@ export default function HomeScreen({ navigation }: any) {
         <Footer />
       </Box>
       <Toast />
+      {isLoading && <Spinner color="emerald.500" />}
     </View>
   );
 }

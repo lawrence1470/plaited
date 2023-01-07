@@ -63,34 +63,41 @@ export default function App() {
     }
   }, [session]);
 
-  const isDoneOnboarding = profile?.is_onboarding_done || step === "Home";
+  const isDoneOnboarding = profile?.is_onboarding_done || false;
 
   return (
     <>
       <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY}>
         <AuthContext.Provider value={{ session, profile, setStep }}>
           <NativeBaseProvider>
-            {session?.user.aud !== "authenticated" ? (
-              <AuthScreen />
-            ) : (
-              <NavigationContainer>
-                {!isDoneOnboarding ? (
-                  <Stack.Navigator>
-                    <Stack.Screen name="Registration" component={() => RegistrationFlow} />
-                  </Stack.Navigator>
-                ) : (
-                  <OrderContextProvider>
-                    <Stack.Navigator>
-                      {/*<Stack.Screen*/}
-                      {/*  name="AddPayment"*/}
-                      {/*  component={AddPaymentScreen}*/}
-                      {/*/>*/}
-                      <Stack.Screen name="Main" component={() => <TabNavigation />} />
-                    </Stack.Navigator>
-                  </OrderContextProvider>
-                )}
-              </NavigationContainer>
-            )}
+            {/*  {session?.user.aud !== "authenticated" ? (*/}
+            {/*    <AuthScreen />*/}
+            {/*  ) : (*/}
+            <NavigationContainer>
+              {/*      {!isDoneOnboarding ? (*/}
+              {/*        <Stack.Navigator>*/}
+              {/*          <Stack.Screen*/}
+              {/*            name="Registration"*/}
+              {/*            component={RegistrationFlow}*/}
+              {/*          />*/}
+              {/*        </Stack.Navigator>*/}
+              {/*      ) : (*/}
+              <OrderContextProvider>
+                <Stack.Navigator>
+                  <Stack.Screen
+                    screenOptions={{
+                      headerShown: false,
+                    }}
+                    name="Main"
+                    component={(props: JSX.IntrinsicAttributes) => (
+                      <TabNavigation {...props} />
+                    )}
+                  />
+                </Stack.Navigator>
+              </OrderContextProvider>
+              {/*        )}*/}
+            </NavigationContainer>
+            {/*    )}*/}
           </NativeBaseProvider>
         </AuthContext.Provider>
       </StripeProvider>

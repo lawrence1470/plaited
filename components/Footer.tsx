@@ -1,7 +1,6 @@
 import { Box, Text, Icon, HStack, Center, Pressable } from "native-base";
 import { useState } from "react";
-import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import { StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
 
 type IconProps = {
@@ -13,21 +12,21 @@ type IconProps = {
 };
 
 const icons: IconProps = {
-  "home": {
+  discover: {
     type: Ionicons,
     filled: "ios-home",
     outline: "ios-home-outline",
   },
-  "cart": {
+  cart: {
     type: Ionicons,
     filled: "cart",
     outline: "cart-outline",
   },
-  "account": {
+  account: {
     type: Ionicons,
     filled: "person",
     outline: "person-outline",
-  }
+  },
 };
 
 export default function Footer({ state, descriptors, navigation }: any) {
@@ -38,7 +37,6 @@ export default function Footer({ state, descriptors, navigation }: any) {
       <HStack bg="indigo.600" alignItems="center" safeAreaBottom shadow={6}>
         {state &&
           state.routes.map((route: any, index: number) => {
-            console.log(state, "state");
             const { options } = descriptors[route.key];
             const label =
               options.tabBarLabel !== undefined
@@ -69,11 +67,11 @@ export default function Footer({ state, descriptors, navigation }: any) {
               });
             };
 
-            const iconKey = icons[label.toLowerCase()]
+            const iconKey = icons[label.toLowerCase()];
 
             return (
               <Pressable
-                opacity={selected === 0 ? 1 : 0.5}
+                opacity={isFocused ? 1 : 0.5}
                 py="3"
                 flex={1}
                 onPress={onPress}
