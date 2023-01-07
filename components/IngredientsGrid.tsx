@@ -19,7 +19,6 @@ export default function IngredientsGrid({
 }: {
   ingredients: any[];
 }) {
-  console.log(ingredients, "these are the ingredients");
 
   return (
     <FlatGrid

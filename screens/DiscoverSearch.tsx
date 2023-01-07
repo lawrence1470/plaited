@@ -9,9 +9,9 @@ import {
   Spinner,
 } from "native-base";
 import { StyleSheet } from "react-native";
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import Toast from "react-native-toast-message";
-import axios from "axios/index";
+import axios from "axios";
 import { SUPABASE_EDGE_FUNCTION_URL, SUPABASE_ANON_KEY } from "@env";
 
 export default function DiscoverSearch({ navigation }: any) {
@@ -24,10 +24,9 @@ export default function DiscoverSearch({ navigation }: any) {
     try {
       const response = await axios({
         method: "post",
-        url: "https://prgckignrovsokkjhffr.functions.supabase.co/generateRecipe",
+        url: `${SUPABASE_EDGE_FUNCTION_URL}/generateRecipe`,
         headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InByZ2NraWducm92c29ra2poZmZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzE4MjY1NzgsImV4cCI6MTk4NzQwMjU3OH0.mYYretwwAh1cNrjMZwISd1jrSQVqKTicCcASH9hImpI",
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
           "Content-Type": "application/json",
         },
         data: { input: userInput },
@@ -57,28 +56,8 @@ export default function DiscoverSearch({ navigation }: any) {
     setUserInput(value);
   }
 
-  async function handlePress() {
-    setLoading(true);
-    const response = await axios.post(
-      `https://prgckignrovsokkjhffr.functions.supabase.co/hello`,
-      {
-        name: "chicken",
-      },
-      {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InByZ2NraWducm92c29ra2poZmZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzE4MjY1NzgsImV4cCI6MTk4NzQwMjU3OH0.mYYretwwAh1cNrjMZwISd1jrSQVqKTicCcASH9hImpI`,
-        },
-      }
-    );
-    setLoading(false);
-    console.log(response.data);
-  }
-
   return (
     <View style={styles.container}>
-      <Button onPress={handlePress}>
-        <Text>test</Text>
-      </Button>
       {!loading ? (
         <>
           <Center>

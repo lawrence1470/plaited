@@ -82,19 +82,17 @@ export default function App() {
               {/*          />*/}
               {/*        </Stack.Navigator>*/}
               {/*      ) : (*/}
-              <OrderContextProvider>
-                <Stack.Navigator>
-                  <Stack.Screen
-                    screenOptions={{
-                      headerShown: false,
-                    }}
-                    name="Main"
-                    component={(props: JSX.IntrinsicAttributes) => (
-                      <TabNavigation {...props} />
-                    )}
-                  />
-                </Stack.Navigator>
-              </OrderContextProvider>
+              <Stack.Navigator>
+                <Stack.Screen
+                  screenOptions={{
+                    headerShown: false,
+                  }}
+                  name="Main"
+                  component={(props: JSX.IntrinsicAttributes) => (
+                    <TabNavigation {...props} />
+                  )}
+                />
+              </Stack.Navigator>
               {/*        )}*/}
             </NavigationContainer>
             {/*    )}*/}

@@ -11,13 +11,12 @@ import {
 } from "native-base";
 import IngredientTile from "./IngredientTile";
 import { FlatList, StyleSheet, View, Dimensions } from "react-native";
-import { FlatGrid } from "react-native-super-grid";
 import { useContext } from "react";
 import { OrderContext } from "../context/OrderContext";
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
-export default function OrderSummary({ navigation }: any) {
+export default function OrderSummary({ navigation, fetchSimilarRecipe }: any) {
   const context = useContext(OrderContext) as any;
 
   const handleCartPress = () => {
@@ -29,7 +28,7 @@ export default function OrderSummary({ navigation }: any) {
       <Box style={styles.orderTotal}>
         <VStack>
           <Text>Estimated Order Total</Text>
-          <Text>{context.totalEstimatedPriceInDollars}</Text>
+          <Text>$TODO</Text>
         </VStack>
       </Box>
       <Box style={styles.buttonContainer}>
@@ -46,7 +45,7 @@ export default function OrderSummary({ navigation }: any) {
           />
           <IconButton
             style={styles.iconButton}
-            // onPress={() => context.removeFromCart(ingredient.id)}
+            onPress={fetchSimilarRecipe}
             variant="unstyled"
             _icon={{
               color: "#777777",

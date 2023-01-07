@@ -8,27 +8,28 @@ export default function OrderContextProvider({
 }: {
   children: ReactNode;
 }) {
+  const [recipeId, setRecipeId] = useState<any>(null);
   const [ingredientsInCart, setIngredientsInCart] = useState([]);
 
-  const removeFromCart = (id: any) => {
+  function removeFromCart(id: any) {
     const removedList = ingredientsInCart.filter(
       (ingredient: any) => ingredient.id !== id
     );
     setIngredientsInCart(removedList);
-  };
+  }
 
-  const clearCart = () => {
+  function clearCart() {
     setIngredientsInCart([]);
-  };
+  }
 
-  const addToCart = (ingredient: any) => {
+  function addToCart(ingredient: any) {
     // @ts-ignore
     setIngredientsInCart([...ingredientsInCart, ingredient]);
-  };
+  }
 
-  const isIngredientInCart = (id: any) => {
+  function isIngredientInCart(id: any) {
     return ingredientsInCart.some((ingredient: any) => ingredient.id === id);
-  };
+  }
 
   const totalEstimatedPriceInCents = ingredientsInCart.reduce(
     (acc: number, ingredient: any) => {
@@ -50,6 +51,8 @@ export default function OrderContextProvider({
   return (
     <OrderContext.Provider
       value={{
+        setRecipeId: setRecipeId,
+        recipeId: recipeId,
         ingredientsInCart,
         setIngredientsInCart,
         removeFromCart,
