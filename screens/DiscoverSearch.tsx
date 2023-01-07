@@ -12,23 +12,29 @@ import { StyleSheet } from "react-native";
 import { SetStateAction, useState } from "react";
 import Toast from "react-native-toast-message";
 import axios from "axios/index";
-import { HEROKU_BASE_URL } from "@env";
+import { SUPABASE_EDGE_FUNCTION_URL, SUPABASE_ANON_KEY } from "@env";
 
 export default function DiscoverSearch({ navigation }: any) {
   const [loading, setLoading] = useState(false);
   const [userInput, setUserInput] = useState("");
 
-  const handleSearch = async () => {
+  async function handleSearch() {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${HEROKU_BASE_URL}/createRecipe`, {
-        input: userInput,
+      const response = await axios({
+        method: "post",
+        url: "https://prgckignrovsokkjhffr.functions.supabase.co/generateRecipe",
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InByZ2NraWducm92c29ra2poZmZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzE4MjY1NzgsImV4cCI6MTk4NzQwMjU3OH0.mYYretwwAh1cNrjMZwISd1jrSQVqKTicCcASH9hImpI",
+          "Content-Type": "application/json",
+        },
+        data: { input: userInput },
       });
 
       if (response.data.success) {
         const { recipe } = response.data;
-
         navigation.navigate("Discover", {
           screen: "Results",
           params: { recipe },
@@ -37,6 +43,7 @@ export default function DiscoverSearch({ navigation }: any) {
         throw new Error("Could not find any recipes please try again");
       }
     } catch (error) {
+      console.error(error);
       Toast.show({
         type: "error",
         text1: "something went wrong",
@@ -44,14 +51,34 @@ export default function DiscoverSearch({ navigation }: any) {
       });
     }
     setLoading(false);
-  };
+  }
 
-  const handleUserInput = (value: string) => {
+  function handleUserInput(value: string) {
     setUserInput(value);
-  };
+  }
+
+  async function handlePress() {
+    setLoading(true);
+    const response = await axios.post(
+      `https://prgckignrovsokkjhffr.functions.supabase.co/hello`,
+      {
+        name: "chicken",
+      },
+      {
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InByZ2NraWducm92c29ra2poZmZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzE4MjY1NzgsImV4cCI6MTk4NzQwMjU3OH0.mYYretwwAh1cNrjMZwISd1jrSQVqKTicCcASH9hImpI`,
+        },
+      }
+    );
+    setLoading(false);
+    console.log(response.data);
+  }
 
   return (
     <View style={styles.container}>
+      <Button onPress={handlePress}>
+        <Text>test</Text>
+      </Button>
       {!loading ? (
         <>
           <Center>
