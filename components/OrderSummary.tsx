@@ -17,7 +17,7 @@ import { OrderContext } from "../context/OrderContext";
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
-export default function OrderSummary({ navigation, clearIngredients }: any) {
+export default function OrderSummary({ navigation }: any) {
   const context = useContext(OrderContext) as any;
 
   const handleCartPress = () => {
@@ -56,7 +56,7 @@ export default function OrderSummary({ navigation, clearIngredients }: any) {
           />
           <IconButton
             style={styles.iconButton}
-            onPress={() => clearIngredients()}
+            onPress={() => console.log('hello')}
             variant="unstyled"
             _icon={{
               color: "#777777",
@@ -72,7 +72,8 @@ export default function OrderSummary({ navigation, clearIngredients }: any) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    paddingTop: 20,
+    paddingBottom: 20,
   },
   orderTotal: {
     flex: 1,

@@ -17,9 +17,9 @@ import { Feather } from "@expo/vector-icons";
 export default function RecipeInstructions({ instructions }) {
   const [collapsed, setCollapsed] = useState(true);
 
-  const handleToggle = () => {
+  function handleToggle() {
     setCollapsed(!collapsed);
-  };
+  }
 
   return (
     <View>
