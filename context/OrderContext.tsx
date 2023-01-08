@@ -8,7 +8,6 @@ export default function OrderContextProvider({
 }: {
   children: ReactNode;
 }) {
-  const [recipeId, setRecipeId] = useState<any>(null);
   const [ingredientsInCart, setIngredientsInCart] = useState([]);
 
   function removeFromCart(id: any) {
@@ -31,6 +30,8 @@ export default function OrderContextProvider({
     return ingredientsInCart.some((ingredient: any) => ingredient.id === id);
   }
 
+
+
   const totalEstimatedPriceInCents = ingredientsInCart.reduce(
     (acc: number, ingredient: any) => {
       // all units are in cents
@@ -51,8 +52,6 @@ export default function OrderContextProvider({
   return (
     <OrderContext.Provider
       value={{
-        setRecipeId: setRecipeId,
-        recipeId: recipeId,
         ingredientsInCart,
         setIngredientsInCart,
         removeFromCart,

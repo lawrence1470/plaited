@@ -15,13 +15,24 @@ import { useContext } from "react";
 import { OrderContext } from "../context/OrderContext";
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import { NavigationContext } from "@react-navigation/native";
 
-export default function OrderSummary({ navigation, fetchSimilarRecipe }: any) {
-  const context = useContext(OrderContext) as any;
+export default function OrderSummary({ fetchSimilarRecipe }: any) {
+  const context = useContext(OrderContext);
+  const navigation = useContext(NavigationContext) as any;
 
-  const handleCartPress = () => {
-    navigation.navigate("Cart");
-  };
+  function goToCart() {
+    navigation.navigate("Discover", {
+      screen: "Cart",
+      params: { cartItems: context.ingredientsInCart },
+    });
+  }
+
+  function goBack() {
+    navigation.navigate("Discover", {
+      screen: "Search",
+    });
+  }
 
   return (
     <HStack style={styles.container} space={3} justifyContent="center">
@@ -35,7 +46,7 @@ export default function OrderSummary({ navigation, fetchSimilarRecipe }: any) {
         <HStack alignItems="center" justifyContent="center" space={3}>
           <IconButton
             style={styles.iconButton}
-            onPress={() => handleCartPress()}
+            onPress={goToCart}
             variant="unstyled"
             _icon={{
               color: "#777777",
@@ -55,7 +66,7 @@ export default function OrderSummary({ navigation, fetchSimilarRecipe }: any) {
           />
           <IconButton
             style={styles.iconButton}
-            onPress={() => console.log('hello')}
+            onPress={goBack}
             variant="unstyled"
             _icon={{
               color: "#777777",

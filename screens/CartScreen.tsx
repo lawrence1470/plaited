@@ -4,46 +4,42 @@ import { StyleSheet } from "react-native";
 import YourCart from "../components/YourCart";
 import { useContext } from "react";
 import { OrderContext } from "../context/OrderContext";
+import Constants from "expo-constants";
+import SimpleHeader from "../components/widgets/SimpleHeader";
 
-export default function CartScreen({ navigation }: any) {
-  const handleGoBack = () => {
+export default function CartScreen({ route, navigation }: any) {
+  function handleGoBack() {
     navigation.goBack();
-  };
+  }
 
   const context = useContext(OrderContext) as any;
 
+  const { cartItems } = route.params;
+
   return (
     <>
-    <View style={styles.container}>
-      <Center>
-        <HStack alignItems="center">
-          <IconButton
-            colorScheme="black"
-            variant="unstyled"
-            onPress={() => handleGoBack()}
-            _icon={{
-              as: Ionicons,
-              name: "chevron-back",
-            }}
+      <View style={styles.container}>
+        <SimpleHeader handleGoBack={handleGoBack} />
+        <Box style={styles.content}>
+          <YourCart
+            cartItems={cartItems}
+            totalEstimatedPriceInDollars={context.totalEstimatedPriceInDollars}
           />
-          <Text>Checkout</Text>
-        </HStack>
-      </Center>
-      <Box>
-        <YourCart
-          cartItems={context.ingredientsInCart}
-          totalEstimatedPriceInDollars={context.totalEstimatedPriceInDollars}
-        />
-      </Box>
-    </View>
+        </Box>
+      </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: Constants.statusBarHeight,
     flex: 1,
-    paddingLeft: 40,
-    paddingRight: 40,
+    paddingLeft: 20,
+    paddingRight: 20,
+    backgroundColor: 'white',
   },
+  content: {
+    flex: 4,
+  }
 });

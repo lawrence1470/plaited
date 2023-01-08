@@ -8,6 +8,7 @@ import { OrderContext } from "../context/OrderContext";
 import Toast from "react-native-toast-message";
 import { SUPABASE_ANON_KEY, SUPABASE_EDGE_FUNCTION_URL } from "@env";
 import axios from "axios";
+import Constants from "expo-constants";
 
 export default function DiscoverResults({ route, navigation }: any) {
   const { recipe } = route.params;
@@ -15,11 +16,8 @@ export default function DiscoverResults({ route, navigation }: any) {
   const context = useContext(OrderContext) as any;
 
   useEffect(() => {
-    context.setRecipeId(recipe.id);
     context.setIngredientsInCart(recipe.ingredients);
   }, []);
-
-  console.log(recipe, "elloo");
 
   async function fetchSimilarRecipe() {
     setLoading(true);
@@ -39,12 +37,11 @@ export default function DiscoverResults({ route, navigation }: any) {
           screen: "Results",
           params: { recipe },
         });
+        context.setIngredientsInCart(recipe.ingredients);
       } else {
         throw new Error("Could not find any recipes please try again");
       }
     } catch (error) {
-      console.error(error, "this is the error");
-
       Toast.show({
         type: "error",
         text1: "something went wrong",
@@ -62,9 +59,7 @@ export default function DiscoverResults({ route, navigation }: any) {
             <RecipeInstructions instructions={recipe.instructions} />
           </Box>
           <Box style={styles.ingredientsContainer}>
-            {/*<ScrollView>*/}
             <IngredientsGrid ingredients={recipe.ingredients} />
-            {/*</ScrollView>*/}
           </Box>
 
           <OrderSummary fetchSimilarRecipe={fetchSimilarRecipe} />
@@ -81,6 +76,7 @@ export default function DiscoverResults({ route, navigation }: any) {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: Constants.statusBarHeight,
     flex: 1,
     paddingLeft: 20,
     paddingRight: 20,

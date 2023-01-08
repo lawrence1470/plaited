@@ -1,18 +1,49 @@
-import { Box, Text, Image, AspectRatio, IconButton, Flex , View} from "native-base";
+import {
+  Box,
+  Text,
+  Image,
+  AspectRatio,
+  IconButton,
+  Flex,
+  View,
+} from "native-base";
 import { StyleSheet } from "react-native";
 import { OrderContext } from "../context/OrderContext";
 import { useContext, useEffect } from "react";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
 
 export default function IngredientTile({ ingredient }: { ingredient: any }) {
   const context = useContext(OrderContext) as any;
 
-  const isInCart = context.isIngredientInCart(ingredient.id);
+  const {removeFromCart,isIngredientInCart, addToCart } = context
+  const isInCart = isIngredientInCart(ingredient.id);
 
   return (
     <Box style={styles.container}>
       <Box style={styles.iconSection}>
-        <Text>Icon</Text>
+        {isInCart ? (
+          <IconButton
+            style={styles.iconButton}
+            onPress={() => removeFromCart(ingredient.id) }
+            variant="unstyled"
+            _icon={{
+              color: "#777777",
+              as: AntDesign,
+              name: "checkcircle",
+            }}
+          />
+        ) : (
+          <IconButton
+            style={styles.iconButton}
+            onPress={() => addToCart(ingredient) }
+            variant="unstyled"
+            _icon={{
+              color: "#777777",
+              as: AntDesign,
+              name: "checkcircleo",
+            }}
+          />
+        )}
       </Box>
       <Box style={styles.imageContainer}>
         <View style={styles.imageWrapper}>
@@ -47,6 +78,11 @@ const styles = StyleSheet.create({
   },
   iconSection: {
     flex: 1,
+    width: '100%',
+  },
+  iconButton: {
+    height: '100%',
+    alignSelf: "flex-end",
   },
   image: {
     flex: 1,
@@ -72,24 +108,4 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 8,
   },
-
-  // iconButtonContainer: {
-  //   position: "absolute",
-  //   top: 0,
-  //   right: 0,
-  // },
-  // iconButton: {
-  //   backgroundColor: "white",
-  // },
-  // container: {
-  //   borderRadius: 6,
-  //   boxShadow: "0.5px 4px 12px rgba(0, 0, 0, 0.15)",
-  //   backgroundColor: "#F5F5F5",
-  //   borderWidth: 1,
-  //   borderStyle: "solid",
-  //   justifyContent: "flex-end",
-  //   padding: 5,
-  //   flex: 1,
-  //   height: 200,
-  // },
 });

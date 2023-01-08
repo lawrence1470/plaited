@@ -13,6 +13,8 @@ import { useState } from "react";
 import Toast from "react-native-toast-message";
 import axios from "axios";
 import { SUPABASE_EDGE_FUNCTION_URL, SUPABASE_ANON_KEY } from "@env";
+import Constants from 'expo-constants';
+
 
 export default function DiscoverSearch({ navigation }: any) {
   const [loading, setLoading] = useState(false);
@@ -103,6 +105,7 @@ export default function DiscoverSearch({ navigation }: any) {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: Constants.statusBarHeight,
     paddingLeft: 20,
     paddingRight: 20,
   },

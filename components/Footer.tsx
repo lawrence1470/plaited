@@ -1,6 +1,6 @@
 import { Box, Text, Icon, HStack, Center, Pressable } from "native-base";
 import { useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { View } from "react-native";
 
 type IconProps = {
@@ -14,8 +14,8 @@ type IconProps = {
 const icons: IconProps = {
   discover: {
     type: Ionicons,
-    filled: "ios-home",
-    outline: "ios-home-outline",
+    filled: "compass",
+    outline: "compass-outline",
   },
   cart: {
     type: Ionicons,
