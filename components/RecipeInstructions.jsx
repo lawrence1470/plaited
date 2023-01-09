@@ -23,10 +23,9 @@ export default function RecipeInstructions({ instructions }) {
 
   return (
     <View>
-      <ScrollView
+      <View
         style={styles.instructionsContainer}
         stickyHeaderIndices={[0]}
-        showsVerticalScrollIndicator={false}
       >
         <Box style={styles.headerText}>
           <Center>
@@ -43,6 +42,7 @@ export default function RecipeInstructions({ instructions }) {
           renderChildrenCollapsed={true}
         >
           <FlatList
+            showsVerticalScrollIndicator ={false}
             data={instructions}
             renderItem={({ item, index }) => (
               <HStack key={index + item} style={styles.item}>
@@ -54,7 +54,7 @@ export default function RecipeInstructions({ instructions }) {
             )}
           />
         </Collapsible>
-      </ScrollView>
+      </View>
       <Box style={styles.footer}>
         {collapsed ? (
           <IconButton

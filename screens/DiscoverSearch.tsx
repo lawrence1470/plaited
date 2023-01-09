@@ -6,19 +6,23 @@ import {
   Button,
   Flex,
   VStack,
+  FormControl,
   Spinner,
+  Box,
 } from "native-base";
 import { StyleSheet } from "react-native";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
 import axios from "axios";
 import { SUPABASE_EDGE_FUNCTION_URL, SUPABASE_ANON_KEY } from "@env";
-import Constants from 'expo-constants';
-
+import Constants from "expo-constants";
+import { DietaryPreferences } from "../components/DietaryPreferences";
 
 export default function DiscoverSearch({ navigation }: any) {
   const [loading, setLoading] = useState(false);
   const [userInput, setUserInput] = useState("");
+
+  const [dietaryPreferences, setDietaryPreferences] = useState([]);
 
   async function handleSearch() {
     setLoading(true);
@@ -62,25 +66,31 @@ export default function DiscoverSearch({ navigation }: any) {
     <View style={styles.container}>
       {!loading ? (
         <>
-          <Center>
-            <Text fontSize="4xl" bold>
-              Plaited
+          <Center style={styles.headerContainer}>
+            <Text style={styles.headerText} fontSize="3xl" bold>
+              What would you
             </Text>
-          </Center>
-
-          <Center>
-            <Text fontSize="4xl" bold>
-              What do you want to cook?
+            <Text style={styles.headerText} fontSize="3xl" bold>
+              like to make?
             </Text>
           </Center>
 
           <VStack space={5}>
-            <Input
-              onChangeText={handleUserInput}
-              variant="rounded"
-              size="2xl"
-              placeholder="try 'pasta and meatballs'"
-              w="100%"
+            <FormControl w="100%">
+              <Text style={styles.textLabel}>Dish Name</Text>
+              <Input
+                colorScheme="black"
+                style={styles.textInput}
+                variant="underlined"
+                placeholder="Steak tacos"
+                borderColor="black"
+                onChangeText={handleUserInput}
+              />
+            </FormControl>
+
+            <DietaryPreferences
+              dietaryPreferences={dietaryPreferences}
+              setDietaryPreferences={setDietaryPreferences}
             />
             <Button
               isDisabled={userInput.length === 0}
@@ -88,7 +98,7 @@ export default function DiscoverSearch({ navigation }: any) {
               style={styles.searchButton}
             >
               <Text fontSize="xl" style={styles.searchButtonText}>
-                Search
+                Let's go
               </Text>
             </Button>
           </VStack>
@@ -105,14 +115,28 @@ export default function DiscoverSearch({ navigation }: any) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Constants.statusBarHeight,
+    backgroundColor: "white",
+    marginTop: Constants.statusBarHeight + 20,
     paddingLeft: 20,
     paddingRight: 20,
+  },
+  headerContainer: {
+    marginBottom: 10,
   },
   searchButton: {
     backgroundColor: "black",
   },
   searchButtonText: {
     color: "white",
+  },
+  headerText: {
+    fontFamily: "PlayfairDisplay_600SemiBold",
+  },
+  textInput: {},
+  textLabel: {
+    fontFamily: "Lato_700Bold",
+    fontSize: 16,
+    color: "black",
+    marginBottom: 10,
   },
 });

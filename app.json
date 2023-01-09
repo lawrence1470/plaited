@@ -1,8 +1,9 @@
 {
   "expo": {
-    "name": "Plaited",
+    "name": "Lawrence Nicastro",
     "slug": "plaited",
-    "version": "1.0.0",
+    "privacy": "unlisted",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -14,11 +15,16 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
+
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "plaited.ios",
+      "infoPlist": {
+        "NSCameraUsageDescription": "some text",
+        "NFCReaderUsageDescription": "NFC tag reading capability",
+        "NSLocationAlwaysUsageDescription": "Some message to appease Apple."
+      }
     },
     "android": {
       "adaptiveIcon": {

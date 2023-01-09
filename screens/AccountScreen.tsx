@@ -4,7 +4,8 @@ import { Button, Text, View } from "native-base";
 export default function AccountScreen({ navigation }: any) {
 
   const handlePayment = () => {
-    navigation.navigate("AddPayment");
+    // navigation.navigate("AddPayment");
+    console.log('hello')
   }
 
   return (

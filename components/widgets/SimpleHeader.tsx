@@ -5,8 +5,10 @@ import Constants from "expo-constants";
 
 export default function SimpleHeader({
   handleGoBack,
+  title
 }: {
   handleGoBack: () => void;
+  title: string
 }) {
   return (
     <Box style={styles.headerContainer}>
@@ -21,7 +23,7 @@ export default function SimpleHeader({
         }}
       />
       <Text style={styles.headerText} bold fontSize="4xl">
-        Checkout
+        {title}
       </Text>
     </Box>
   );
@@ -42,5 +44,6 @@ const styles = StyleSheet.create({
   },
   headerText: {
     textAlign: "center",
+    fontFamily: "playFair",
   },
 });

@@ -19,7 +19,7 @@ export default function CartScreen({ route, navigation }: any) {
   return (
     <>
       <View style={styles.container}>
-        <SimpleHeader handleGoBack={handleGoBack} />
+        <SimpleHeader handleGoBack={handleGoBack} title="Checkout" />
         <Box style={styles.content}>
           <YourCart
             cartItems={cartItems}

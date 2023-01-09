@@ -1,5 +1,5 @@
 import "react-native-url-polyfill/auto";
-import { useState, useEffect, createContext } from "react";
+import { useState, useEffect, createContext, useCallback } from "react";
 import { supabase } from "./lib/supabase";
 import AuthScreen from "./screens/AuthScreen";
 import LocationScreen from "./screens/LocationScreen";
@@ -18,12 +18,20 @@ import CartScreen from "./screens/CartScreen";
 import OrderContextProvider from "./context/OrderContext";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Footer from "./components/Footer";
-import { StripeProvider } from "@stripe/stripe-react-native";
+// import { StripeProvider } from "@stripe/stripe-react-native";
 import { STRIPE_PUBLISHABLE_KEY } from "@env";
-import AddPaymentScreen from "./screens/AddPaymentScreen";
 import AccountScreen from "./screens/AccountScreen";
 import TabNavigation from "./navigation/TabNavigation";
 import RegistrationFlow from "./navigation/RegistrationFlow";
+import * as SplashScreen from "expo-splash-screen";
+import { View } from "react-native";
+import { useFonts } from "expo-font";
+import {
+  PlayfairDisplay_900Black,
+  PlayfairDisplay_600SemiBold,
+  PlayfairDisplay_400Regular,
+} from "@expo-google-fonts/playfair-display";
+import { Lato_400Regular, Lato_700Bold } from "@expo-google-fonts/lato";
 
 const getProfie = async (session: Session) => {
   const userId = session.user.id;
@@ -41,65 +49,83 @@ export default function App() {
   const [step, setStep] = useState<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const [fontsLoaded] = useFonts({
+    PlayfairDisplay_600SemiBold,
+    PlayfairDisplay_400Regular,
+    Lato_400Regular,
+    Lato_700Bold
+  });
+
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+    }
+    prepare();
   }, []);
 
-  useEffect(() => {
-    if (session?.user.aud === "authenticated") {
-      getProfie(session).then(({ data }) => {
-        setProfile(data as Profile);
-      });
-    }
-  }, [session]);
+  if (!fontsLoaded) {
+    return null;
+  } else {
+    SplashScreen.hideAsync();
+  }
 
-  const isDoneOnboarding = profile?.is_onboarding_done || false;
+  // useEffect(() => {
+  //   supabase.auth.getSession().then(({ data: { session } }) => {
+  //     setSession(session);
+  //   });
+  //
+  //   supabase.auth.onAuthStateChange((_event, session) => {
+  //     setSession(session);
+  //   });
+  //
+  //   supabase.auth.onAuthStateChange((_event, session) => {
+  //     setSession(session);
+  //   });
+  // }, []);
+
+  // useEffect(() => {
+  //   if (session?.user.aud === "authenticated") {
+  //     getProfie(session).then(({ data }) => {
+  //       setProfile(data as Profile);
+  //     });
+  //   }
+  // }, [session]);
+
+  // const isDoneOnboarding = profile?.is_onboarding_done || false;
 
   return (
-    <>
-      <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY}>
-        <AuthContext.Provider value={{ session, profile, setStep }}>
-          <NativeBaseProvider>
-            {/*  {session?.user.aud !== "authenticated" ? (*/}
-            {/*    <AuthScreen />*/}
-            {/*  ) : (*/}
-            <NavigationContainer>
-              {/*      {!isDoneOnboarding ? (*/}
-              {/*        <Stack.Navigator>*/}
-              {/*          <Stack.Screen*/}
-              {/*            name="Registration"*/}
-              {/*            component={RegistrationFlow}*/}
-              {/*          />*/}
-              {/*        </Stack.Navigator>*/}
-              {/*      ) : (*/}
-              <Stack.Navigator
-                screenOptions={{
-                  headerShown: false,
-                }}
-              >
-                <Stack.Screen
-                  name="Main"
-                  component={(props: JSX.IntrinsicAttributes) => (
-                    <TabNavigation {...props} />
-                  )}
-                />
-              </Stack.Navigator>
-              {/*        )}*/}
-            </NavigationContainer>
-            {/*    )}*/}
-          </NativeBaseProvider>
-        </AuthContext.Provider>
-      </StripeProvider>
-    </>
+    // <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY}>
+    <AuthContext.Provider value={{ session, profile, setStep }}>
+      <NativeBaseProvider>
+        {/*  {session?.user.aud !== "authenticated" ? (*/}
+        {/*    <AuthScreen />*/}
+        {/*  ) : (*/}
+        <NavigationContainer>
+          {/*      {!isDoneOnboarding ? (*/}
+          {/*        <Stack.Navigator>*/}
+          {/*          <Stack.Screen*/}
+          {/*            name="Registration"*/}
+          {/*            component={RegistrationFlow}*/}
+          {/*          />*/}
+          {/*        </Stack.Navigator>*/}
+          {/*      ) : (*/}
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
+            <Stack.Screen
+              name="Main"
+              component={(props: JSX.IntrinsicAttributes) => (
+                <TabNavigation {...props} />
+              )}
+            />
+          </Stack.Navigator>
+          {/*        )}*/}
+        </NavigationContainer>
+        {/*    )}*/}
+      </NativeBaseProvider>
+    </AuthContext.Provider>
+    // </StripeProvider>
   );
 }
