@@ -44,6 +44,6 @@ const styles = StyleSheet.create({
   },
   headerText: {
     textAlign: "center",
-    fontFamily: "playFair",
+    fontFamily: "PlayfairDisplay_600SemiBold",
   },
 });

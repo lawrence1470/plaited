@@ -1,7 +1,7 @@
 import { View, Text, Button, ScrollView, Box, Spinner } from "native-base";
 import IngredientsGrid from "../components/IngredientsGrid";
 import { StyleSheet } from "react-native";
-import RecipeInstructions from "../components/RecipeInstructions";
+import RecipeDetails from "../components/RecipeDetails";
 import OrderSummary from "../components/OrderSummary";
 import { useEffect, useContext, useState } from "react";
 import { OrderContext } from "../context/OrderContext";
@@ -9,6 +9,7 @@ import Toast from "react-native-toast-message";
 import { SUPABASE_ANON_KEY, SUPABASE_EDGE_FUNCTION_URL } from "@env";
 import axios from "axios";
 import Constants from "expo-constants";
+import SimpleHeader from "../components/widgets/SimpleHeader";
 
 export default function DiscoverResults({ route, navigation }: any) {
   const { recipe } = route.params;
@@ -53,10 +54,11 @@ export default function DiscoverResults({ route, navigation }: any) {
 
   return (
     <View style={styles.container}>
+      <SimpleHeader title="Results" handleGoBack={() => navigation.goBack()}/>
       {!loading ? (
         <>
           <Box style={styles.instructionsContainer}>
-            <RecipeInstructions instructions={recipe.instructions} />
+            <RecipeDetails recipe={recipe} />
           </Box>
           <Box style={styles.ingredientsContainer}>
             <IngredientsGrid ingredients={recipe.ingredients} />

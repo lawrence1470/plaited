@@ -8,7 +8,7 @@ export function DietaryPreferences({
   setDietaryPreferences,
 }: {
   dietaryPreferences: string[];
-  setDietaryPreferences: (dietaryPreferences: string[]) => void;
+  setDietaryPreferences: any;
 }) {
   const first4Preferences = preferences().slice(0, 4);
   const last3Preferences = preferences().slice(4, 7);
@@ -149,7 +149,7 @@ function preferences() {
     //   ),
     // },
     {
-      name: "Pescatarian",
+      name: "pescetarian",
       icon: (
         <Svg width="72" height="50" viewBox="0 0 72 50" fill="none">
           <Path
