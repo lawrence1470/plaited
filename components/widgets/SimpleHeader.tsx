@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     position: "relative",
     paddingTop: 8,
-    paddingBottom: 8,
+    // paddingBottom: 8,
   },
   backButton: {
     position: "absolute",

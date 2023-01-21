@@ -1,31 +1,35 @@
 import { Box, Text, Icon, HStack, Center, Pressable } from "native-base";
 import { useState } from "react";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
-import { View } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
+import { PlateFilled, PlateOutline } from "../assets/icons/Plate";
+import { OrdersFilled, OrdersOutline } from "../assets/icons/Orders";
+import { AccountOutline, AccountFilled } from "../assets/icons/Account";
+import * as Haptics from "expo-haptics";
 
 type IconProps = {
   [key: string]: {
     type: any;
-    outline: string;
-    filled: string;
+    outline: any;
+    filled: any;
   };
 };
 
 const icons: IconProps = {
   discover: {
     type: Ionicons,
-    filled: "compass",
-    outline: "compass-outline",
+    filled: <PlateFilled />,
+    outline: <PlateOutline />,
   },
-  cart: {
+  orders: {
     type: Ionicons,
-    filled: "cart",
-    outline: "cart-outline",
+    filled: <OrdersFilled />,
+    outline: <OrdersOutline />,
   },
   account: {
     type: Ionicons,
-    filled: "person",
-    outline: "person-outline",
+    filled: <AccountFilled />,
+    outline: <AccountOutline />,
   },
 };
 
@@ -34,7 +38,7 @@ export default function Footer({ state, descriptors, navigation }: any) {
 
   return (
     <View>
-      <HStack bg="indigo.600" alignItems="center" safeAreaBottom shadow={6}>
+      <HStack style={styles.container} bg="white" alignItems="center" safeAreaBottom shadow={6}>
         {state &&
           state.routes.map((route: any, index: number) => {
             const { options } = descriptors[route.key];
@@ -48,6 +52,7 @@ export default function Footer({ state, descriptors, navigation }: any) {
             const isFocused = state.index === index;
 
             const onPress = () => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
               const event = navigation.emit({
                 type: "tabPress",
                 target: route.key,
@@ -79,14 +84,15 @@ export default function Footer({ state, descriptors, navigation }: any) {
                 key={index}
               >
                 <Center>
-                  <Icon
-                    mb="1"
-                    as={iconKey.type}
-                    name={isFocused ? iconKey.filled : iconKey.outline}
-                    color="white"
-                    size="sm"
-                  />
-                  <Text color="white" fontSize="12">
+                  {isFocused ? iconKey.filled : iconKey.outline}
+                  {/*<Icon*/}
+                  {/*  mb="1"*/}
+                  {/*  as={iconKey.type}*/}
+                  {/*  name={isFocused ? iconKey.filled : iconKey.outline}*/}
+                  {/*  color="white"*/}
+                  {/*  size="sm"*/}
+                  {/*/>*/}
+                  <Text color="black" fontSize="12">
                     {label}
                   </Text>
                 </Center>
@@ -97,3 +103,15 @@ export default function Footer({ state, descriptors, navigation }: any) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  image: {
+    flex: 1,
+    height: 30,
+    width: 30,
+  },
+  container: {
+
+    elevation: 2,
+  },
+});

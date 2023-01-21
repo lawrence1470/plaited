@@ -33,6 +33,7 @@ import {
 } from "@expo-google-fonts/playfair-display";
 import { Lato_400Regular, Lato_700Bold } from "@expo-google-fonts/lato";
 
+
 const getProfie = async (session: Session) => {
   const userId = session.user.id;
   return await supabase.from("profiles").select().eq("id", userId).single();

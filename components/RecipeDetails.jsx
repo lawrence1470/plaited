@@ -9,6 +9,7 @@ import {
   HStack,
   Center,
   Image,
+  VStack,
 } from "native-base";
 import { useState } from "react";
 import Collapsible from "react-native-collapsible";
@@ -24,7 +25,7 @@ export default function RecipeDetails({ recipe }) {
 
   const { instructions, ingredients } = recipe;
 
-  console.log(recipe.image, 'hi')
+  console.log(recipe.image, "hi");
 
   return (
     <View>
@@ -32,68 +33,90 @@ export default function RecipeDetails({ recipe }) {
         <Text style={styles.headerText} bold fontSize="xl">
           {recipe.title}
         </Text>
-        <Collapsible
-          style={styles.collpaseContainer}
-          duration={400}
-          collapsedHeight={150}
-          collapsed={collapsed}
-          renderChildrenCollapsed={true}
-        >
-          <View style={styles.imageWrapper}>
-            <Image
-              style={styles.image}
-              source={{
-                uri: recipe.image,
-              }}
-              alt="recipe image"
-            />
-          </View>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={instructions}
-            renderItem={({ item, index }) => (
-              <HStack key={index + item} style={styles.item}>
-                <Text bold fontSize="sm">
-                  Step {index + 1}
-                </Text>
-                <Text>{item}</Text>
-              </HStack>
-            )}
+        <Box style={styles.imageWrapper}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: recipe.image,
+            }}
+            alt="recipe image"
           />
-        </Collapsible>
+        </Box>
+
+        <Box style={styles.recipeInfo}>
+          <HStack space={20}>
+            <VStack>
+              <Text style={styles.infoText}>RATING</Text>
+              <Text style={styles.infoText}>TOTAL TIME</Text>
+              <Text style={styles.infoText}>SERVINGS</Text>
+            </VStack>
+            <VStack>
+              <Text style={styles.associatedInfoText}></Text>
+              <Text style={styles.associatedInfoText}>30 min</Text>
+              <Text style={styles.associatedInfoText}>2 servings</Text>
+            </VStack>
+          </HStack>
+        </Box>
+
+        {/*</Box>*/}
+        {/*<FlatList*/}
+        {/*  showsVerticalScrollIndicator={false}*/}
+        {/*  data={instructions}*/}
+        {/*  renderItem={({ item, index }) => (*/}
+        {/*    <HStack key={index + item} style={styles.item}>*/}
+        {/*      <Text bold fontSize="sm">*/}
+        {/*        Step {index + 1}*/}
+        {/*      </Text>*/}
+        {/*      <Text>{item}</Text>*/}
+        {/*    </HStack>*/}
+        {/*  )}*/}
+        {/*/>*/}
+        {/*</Box>*/}
       </View>
       <Box style={styles.footer}>
-        {collapsed ? (
-          <IconButton
-            // style={styles.iconButton}
-            onPress={handleToggle}
-            colorScheme="black"
-            variant="unstyled"
-            _icon={{
-              as: Feather,
-              name: "arrow-down-right",
-            }}
-          />
-        ) : (
-          <IconButton
-            // style={styles.iconButton}
-            onPress={handleToggle}
-            colorScheme="black"
-            variant="unstyled"
-            _icon={{
-              as: Feather,
-              name: "arrow-up-left",
-            }}
-          />
-        )}
+        {/*{collapsed ? (*/}
+        {/*  <IconButton*/}
+        {/*    // style={styles.iconButton}*/}
+        {/*    onPress={handleToggle}*/}
+        {/*    colorScheme="black"*/}
+        {/*    variant="unstyled"*/}
+        {/*    _icon={{*/}
+        {/*      as: Feather,*/}
+        {/*      name: "arrow-down-right",*/}
+        {/*    }}*/}
+        {/*  />*/}
+        {/*) : (*/}
+        {/*  <IconButton*/}
+        {/*    // style={styles.iconButton}*/}
+        {/*    onPress={handleToggle}*/}
+        {/*    colorScheme="black"*/}
+        {/*    variant="unstyled"*/}
+        {/*    _icon={{*/}
+        {/*      as: Feather,*/}
+        {/*      name: "arrow-up-left",*/}
+        {/*    }}*/}
+        {/*  />*/}
+        {/*)}*/}
       </Box>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  collpaseContainer: {
-    maxHeight: 300,
+  recipeInfo: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    textAlign: "left",
+  },
+  infoText: {
+    textAlign: "left",
+    color: "#7399AE",
+    fontFamily: "Lato_400Regular",
+  },
+  associatedInfoText: {
+    fontFamily: "Lato_400Regular",
   },
   container: {
     position: "relative",
@@ -101,19 +124,18 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderWidth: "1px solid",
     borderColor: "#C4C4C4",
-    borderRadius: 6,
+    borderRadius: 10,
+    height: 230,
   },
   imageWrapper: {
     width: "100%",
     height: 100,
-    backgroundColor: "#D9D9D9",
   },
   headerText: {
-    paddingLeft: 8,
-    paddingRight: 8,
+    paddingLeft: 20,
+    paddingRight: 20,
     paddingTop: 8,
     paddingBottom: 8,
-    backgroundColor: "white",
     fontFamily: "PlayfairDisplay_400Regular",
   },
   image: {
@@ -121,8 +143,6 @@ const styles = StyleSheet.create({
     width: undefined,
     height: undefined,
     objectFit: "cover",
-    backgroundColor: "#D9D9D9",
-    borderRadius: 20,
   },
   footer: {
     // height: 40,

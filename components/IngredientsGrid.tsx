@@ -19,13 +19,14 @@ export default function IngredientsGrid({
 }: {
   ingredients: any[];
 }) {
-
   return (
     <FlatGrid
-      itemDimension={0}
       data={ingredients}
+      itemDimension={100}
+      adjustGridToStyles={true}
+      itemContainerStyle={styles.itemContainer}
       maxItemsPerRow={2}
-      spacing={20}
+      spacing={24}
       renderItem={({ item }) => (
         <IngredientTile ingredient={item} key={item.id} />
       )}
@@ -34,9 +35,11 @@ export default function IngredientsGrid({
 }
 
 const styles = StyleSheet.create({
-
   container: {
-    paddingLeft: 20,
-    paddingRight: 20,
+    // paddingLeft: -10,
+    // paddingRight: -10,
   },
+  itemContainer: {
+    // marginRight: 10,
+  }
 });

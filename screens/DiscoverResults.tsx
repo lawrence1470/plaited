@@ -80,11 +80,15 @@ const styles = StyleSheet.create({
   container: {
     marginTop: Constants.statusBarHeight,
     flex: 1,
-    paddingLeft: 20,
-    paddingRight: 20,
+    // paddingLeft: 20,
+    // paddingRight: 20,
     backgroundColor: "white",
   },
-  instructionsContainer: {},
+  instructionsContainer: {
+    paddingRight: 20,
+    paddingLeft: 20,
+
+  },
   ingredientsContainer: {
     flex: 1,
   },

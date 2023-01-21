@@ -38,8 +38,8 @@ export default function OrderSummary({ fetchSimilarRecipe }: any) {
     <HStack style={styles.container} space={3} justifyContent="center">
       <Box style={styles.orderTotal}>
         <VStack>
-          <Text>Estimated Order Total</Text>
-          <Text>$TODO</Text>
+          <Text style={styles.regText}>Order Total</Text>
+          <Text style={styles.regText}>$47.98</Text>
         </VStack>
       </Box>
       <Box style={styles.buttonContainer}>
@@ -81,15 +81,17 @@ export default function OrderSummary({ fetchSimilarRecipe }: any) {
 }
 
 const styles = StyleSheet.create({
+  regText: {
+    fontFamily: "Lato_400Regular",
+  },
   container: {
     paddingTop: 20,
     paddingBottom: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   orderTotal: {
     flex: 1,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
   },
   iconButton: {
     backgroundColor: "#303030",
@@ -97,8 +99,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
     flex: 1,
   },
   box: {

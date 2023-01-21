@@ -70,8 +70,10 @@ export default function DiscoverSearch({ navigation }: any) {
             <Text style={styles.headerText} fontSize="3xl" bold>
               What would you
             </Text>
+
             <Text style={styles.headerText} fontSize="3xl" bold>
-              like to make?
+              like to
+              <Text fontSize="3xl" style={styles.cook}> cook?</Text>
             </Text>
           </Center>
 
@@ -115,12 +117,13 @@ export default function DiscoverSearch({ navigation }: any) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
-    marginTop: Constants.statusBarHeight + 20,
+    height: "100%",
+    backgroundColor: "#ffffff",
     paddingLeft: 20,
     paddingRight: 20,
   },
   headerContainer: {
+    marginTop: Constants.statusBarHeight,
     marginBottom: 10,
   },
   searchButton: {
@@ -139,4 +142,8 @@ const styles = StyleSheet.create({
     color: "black",
     marginBottom: 10,
   },
+  cook: {
+    fontFamily: "PlayfairDisplay_600SemiBold",
+    color: "#2D7BA6"
+  }
 });

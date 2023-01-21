@@ -1,30 +1,33 @@
-import {
-  Box,
-  Text,
-  Image,
-  AspectRatio,
-  IconButton,
-  Flex,
-  View,
-} from "native-base";
-import { StyleSheet } from "react-native";
+import { Box, Text, Image, IconButton, View, Pressable } from "native-base";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { OrderContext } from "../context/OrderContext";
-import { useContext, useEffect } from "react";
-import { AntDesign, Feather } from "@expo/vector-icons";
+import { useContext } from "react";
+import { AntDesign } from "@expo/vector-icons";
+import * as Haptics from 'expo-haptics';
+
+
 
 export default function IngredientTile({ ingredient }: { ingredient: any }) {
   const context = useContext(OrderContext) as any;
 
-  const {removeFromCart,isIngredientInCart, addToCart } = context
+  const { removeFromCart, isIngredientInCart, addToCart } = context;
   const isInCart = isIngredientInCart(ingredient.id);
 
+  function handlePress() {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+    if (isInCart) {
+      removeFromCart(ingredient.id);
+    } else {
+      addToCart(ingredient);
+    }
+  }
+
   return (
-    <Box style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={handlePress}>
       <Box style={styles.iconSection}>
         {isInCart ? (
           <IconButton
             style={styles.iconButton}
-            onPress={() => removeFromCart(ingredient.id) }
             variant="unstyled"
             _icon={{
               color: "#777777",
@@ -35,7 +38,7 @@ export default function IngredientTile({ ingredient }: { ingredient: any }) {
         ) : (
           <IconButton
             style={styles.iconButton}
-            onPress={() => addToCart(ingredient) }
+            onPress={() => addToCart(ingredient)}
             variant="unstyled"
             _icon={{
               color: "#777777",
@@ -65,23 +68,32 @@ export default function IngredientTile({ ingredient }: { ingredient: any }) {
         <Text fontSize="xs">{ingredient.name}</Text>
         <Text fontSize="xs">{ingredient.amount + " " + ingredient.unit}</Text>
       </Box>
-    </Box>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "white",
     height: 200,
     padding: 8,
     borderRadius: 6,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3,
   },
   iconSection: {
     flex: 1,
-    width: '100%',
+    width: "100%",
   },
   iconButton: {
-    height: '100%',
+    height: "100%",
     alignSelf: "flex-end",
   },
   image: {
@@ -89,7 +101,6 @@ const styles = StyleSheet.create({
     width: undefined,
     height: undefined,
     backgroundColor: "#D9D9D9",
-    borderRadius: 20,
   },
   imageContainer: {
     flex: 3,
@@ -99,7 +110,6 @@ const styles = StyleSheet.create({
   imageWrapper: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#D9D9D9",
     padding: 8,
     borderRadius: 20,
   },

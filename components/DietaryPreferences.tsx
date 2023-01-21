@@ -29,7 +29,6 @@ export function DietaryPreferences({
       <VStack space={4}>
         <HStack space={4}>
           {first4Preferences.map((preference) => {
-            console.log(preference.name, "name");
             const isSelected = dietaryPreferences.includes(preference.name);
             return (
               <Pressable
